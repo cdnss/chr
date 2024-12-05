@@ -1,5 +1,5 @@
 // index.js
-const chromium = require('chrome-aws-lambda');
+/*const chromium = require('chrome-aws-lambda');
 const puppeteer = require('puppeteer-core');
 async function handler(event, context){
     const browser = await puppeteer.launch({
@@ -24,11 +24,11 @@ async function handler(event, context){
 };
 
 export default handler;
-
-/*const chromium = require('chrome-aws-lambda')
+*/
+const chromium = require('chrome-aws-lambda')
 const puppeteer = require('puppeteer-core')
 
-exports.handler = async (event, context) => {
+async function handler(event, context) {
   let theTitle = null
   let browser = null
   console.log('spawning chrome headless')
@@ -78,4 +78,4 @@ exports.handler = async (event, context) => {
     })
   }
 }
-*/
+export default handler;
