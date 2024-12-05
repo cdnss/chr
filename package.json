@@ -1,14 +1,19 @@
 {
-  "name": "headless-chrome",
+  "name": "nodejs",
   "version": "1.0.0",
   "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "David Wells <hello@davidwells.io> (https://davidwells.io/)",
-  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "chrome-aws-lambda": "^1.11.1",
-    "puppeteer-core": "^1.11.0"
+    "@types/node": "^18.0.6",
+    "chrome-aws-lambda": "^10.1.0",
+    "puppeteer-core": "^23.10.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   }
 }
