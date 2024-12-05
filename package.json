@@ -6,9 +6,6 @@
     "chrome-aws-lambda": "~3.1.1",
     "puppeteer-core": "~3.1.0"
   },
-  "devDependencies": {
-    "chrome-finder": "https://github.com/simplemerchant/chrome-finder.git"
-  },
   "scripts": {
     "start": "vercel dev"
   }
