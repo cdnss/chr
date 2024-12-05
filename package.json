@@ -1,12 +1,14 @@
 {
-  "name": "puppetron",
-  "version": "6.0.0",
-  "license": "MIT",
-  "dependencies": {
-    "chrome-aws-lambda": "~3.1.1",
-    "puppeteer-core": "~3.1.0"
-  },
+  "name": "your-puppeteer-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "vercel dev"
+    "dev": "node index.js",
+    "build": "vercel build"
+  },
+  "dependencies": {
+    "chrome-aws-lambda": "^12.0.0",
+    "puppeteer-core": "^19.5.2"
   }
 }
