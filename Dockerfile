@@ -22,6 +22,6 @@ ENV DISPLAY=:4
 
 # Run Xvfb, x11vnc, and websockify with 800x800 resolution
 CMD sh -c "Xvfb $DISPLAY -screen 0 800x800x24 & sleep 5 && \
-        x11vnc -ncache_cr 10 -display $DISPLAY -forever -shared -nopw & \
+        x11vnc -ncache_cr -display $DISPLAY -forever -shared -nopw & \
         websockify -v --web=/novnc 6080 localhost:5900 & \
         firefox-esr & wait"
