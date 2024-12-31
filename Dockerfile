@@ -18,7 +18,7 @@ RUN apk add --no-cache firefox-esr
 RUN git clone https://github.com/novnc/noVNC.git /novnc
 
 # Atur DISPLAY
-ENV DISPLAY=:4
+ENV DISPLAY=:5
 
 # Run Xvfb, x11vnc, and websockify with 800x800 resolution
 CMD sh -c "Xvfb $DISPLAY -screen 0 800x800x24 & sleep 5 && \
