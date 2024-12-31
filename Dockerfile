@@ -1,19 +1,18 @@
 # Dockerfile for running noVNC with Firefox
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
 # Install necessary packages
-RUN apt-get update && \
-    apt-get install -y \
-    dbus \
+RUN apt-get update && apt-get install -y \
+    dbus-x11 \
     fontconfig \
     fonts-dejavu \
     git \
     xvfb \
     x11vnc \
-    websockify
+    websockify \
+    libxtst6 \
+    firefox
 
-# Install Firefox
-RUN apt-get install -y firefox-esr
 
 # Download noVNC
 RUN git clone https://github.com/novnc/noVNC.git /novnc
