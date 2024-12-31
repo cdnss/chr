@@ -9,6 +9,7 @@ RUN apk update && apk add --no-cache \
     wget \
     ttf-dejavu \
     fontconfig \
+    git \
     libxtst
     
 # Create supervisor config file directory
