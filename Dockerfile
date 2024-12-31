@@ -1,5 +1,27 @@
-FROM dorowu/ubuntu-desktop-lxde-vnc
+# Dockerfile for running noVNC with Firefox
+FROM alpine:latest
 
-EXPOSE 80
+# Install necessary packages
+RUN apk add --no-cache \
+    xvfb \
+    x11vnc \
+    websockify \
+    dbus \
+    ttf-dejavu \
+    fontconfig \
+    git
 
-CMD ["/bin/bash"]
+# Install Firefox
+RUN apk add --no-cache firefox
+
+# Download noVNC
+RUN git clone https://github.com/novnc/noVNC.git /novnc
+
+# Atur DISPLAY
+ENV DISPLAY=:1
+
+# Run Xvfb, x11vnc, and websockify with 800x800 resolution
+CMD sh -c "Xvfb $DISPLAY -screen 0 800x800x24 & sleep 5 && \
+        x11vnc -display $DISPLAY -forever -shared -nopw & \
+        websockify -v --web=/novnc 6080 localhost:5900 & \
+        firefox & wait"
