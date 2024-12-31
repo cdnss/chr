@@ -1,27 +1,20 @@
 # Dockerfile for running noVNC with Firefox
-FROM alpine:latest
+FROM ubuntu:latest
 
 # Install necessary packages
-RUN apk add --no-cache \
+RUN apt-get update && \
+    apt-get install -y \
+    dbus \
+    fontconfig \
+    fonts-dejavu \
+    git \
     xvfb \
     x11vnc \
-    websockify \
-    dbus \
-    ttf-dejavu \
-    fontconfig \
-    git
+    websockify
 
 # Install Firefox
-RUN apk add --no-cache firefox
+RUN apt-get install -y firefox-esr
 
 # Download noVNC
 RUN git clone https://github.com/novnc/noVNC.git /novnc
-
-# Atur DISPLAY
-ENV DISPLAY=:1
-
-# Run Xvfb, x11vnc, and websockify with 800x800 resolution
-CMD sh -c "Xvfb $DISPLAY -screen 0 800x800x24 & sleep 5 && \
-        x11vnc -display $DISPLAY -forever -shared -nopw & \
-        websockify -v --web=/novnc 6080 localhost:5900 & \
-        firefox & wait"
+CMD ["websockify", "-v", "-v", "-v", "6080", "--", "/usr/bin/x11vnc", "-display", ":99", "-rfbport", "5900"]
