@@ -1,40 +1,30 @@
-# Dockerfile for running noVNC with Firefox
-FROM ubuntu:22.04
+# Use Alpine Linux as the base image
+FROM alpine:latest
 
-# Install necessary packages
-RUN apt-get update && apt-get install -y \
-    dbus-x11 \
-    fontconfig \
-    fonts-dejavu \
-    git \
-    xvfb \
+# Install required packages
+RUN apk update && apk add --no-cache \
     x11vnc \
     websockify \
-    libxtst6 \
-    firefox
+    supervisor \
+    wget \
+    ttf-dejavu \
+    fontconfig \
+    libxtst
+    
+# Create supervisor config file directory
+RUN mkdir -p /etc/supervisor.d
+    
+# Copy supervisor configuration file
+COPY supervisord.conf /etc/supervisord.conf
 
-# Install supervisor
-    supervisor
-
-
-# Download noVNC
-RUN git clone https://github.com/novnc/noVNC.git /novnc
-
-# Create supervisor configuration file
-RUN mkdir -p /etc/supervisor/conf.d/
-RUN echo "[supervisord]" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "nodaemon=true" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "[program:x11vnc]" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "command=/usr/bin/x11vnc -display :99 -rfbport 5900 -localhost" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "autostart=true" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "autorestart=true" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "[program:websockify]" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "command=websockify -v -v -v 6080 -- /usr/bin/x11vnc -display :99 -rfbport 5900 -localhost" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "autostart=true" >> /etc/supervisor/conf.d/supervisord.conf
-RUN echo "autorestart=true" >> /etc/supervisor/conf.d/supervisord.conf
+# Install noVNC
+RUN git clone https://github.com/novnc/noVNC.git /usr/share/novnc
 
 EXPOSE 6080 5900
-HEALTHCHECK --interval=30s --timeout=10s CMD /usr/bin/pgrep x11vnc || exit 1
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --retries=3 \
+    CMD wget -O /dev/null http://localhost:6080 || exit 1
+
+# Run supervisord
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
