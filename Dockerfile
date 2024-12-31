@@ -1,31 +1,27 @@
-# Use Alpine Linux as the base image
+# Dockerfile for running noVNC with Firefox
 FROM alpine:latest
 
-# Install required packages
+# Install necessary packages
 RUN apk update && apk add --no-cache \
+    xvfb \
     x11vnc \
     websockify \
-    supervisor \
-    wget \
+    dbus \
     ttf-dejavu \
     fontconfig \
-    git \
-    libxtst
-    
-# Create supervisor config file directory
-RUN mkdir -p /etc/supervisor.d
-    
-# Copy supervisor configuration file
-COPY supervisord.conf /etc/supervisord.conf
+    git
 
-# Install noVNC
-RUN git clone https://github.com/novnc/noVNC.git /usr/share/novnc
+# Install Firefox
+RUN apk add --no-cache firefox-esr
 
-EXPOSE 6080
+# Download noVNC
+RUN git clone https://github.com/novnc/noVNC.git /novnc
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --retries=3 \
-    CMD wget -O /dev/null http://localhost:6080 || exit 1
+# Atur DISPLAY
+ENV DISPLAY=:1
 
-# Run supervisord
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+# Run Xvfb, x11vnc, and websockify with 800x800 resolution
+CMD sh -c "Xvfb $DISPLAY -screen 0 800x800x24 & sleep 5 && \
+        x11vnc -display $DISPLAY -forever -shared -nopw & \
+        websockify -v --web=/novnc 6080 localhost:5900 & \
+        firefox-esr & wait"
