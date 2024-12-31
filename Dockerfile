@@ -21,7 +21,7 @@ COPY supervisord.conf /etc/supervisord.conf
 # Install noVNC
 RUN git clone https://github.com/novnc/noVNC.git /usr/share/novnc
 
-EXPOSE 6080 5900
+EXPOSE 6080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --retries=3 \
