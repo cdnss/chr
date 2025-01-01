@@ -12,7 +12,7 @@ RUN apk update && apk add --no-cache \
     git
 
 # Install Firefox
-RUN apk add --no-cache firefox-esr
+RUN apk add --no-cache firefox
 
 # Download noVNC
 RUN git clone https://github.com/novnc/noVNC.git /novnc
@@ -24,4 +24,4 @@ ENV DISPLAY=:5
 CMD sh -c "Xvfb $DISPLAY -screen 0 800x800x24 & sleep 5 && \
         x11vnc -ncache_cr -display $DISPLAY -forever -shared -nopw & \
         websockify -v --web=/novnc 6080 localhost:5900 & \
-        firefox-esr & wait"
+        firefox & wait"
