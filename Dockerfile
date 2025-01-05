@@ -1,27 +1,34 @@
-# Dockerfile for running noVNC with Firefox
 FROM alpine:latest
 
-# Install necessary packages
-RUN apk update && apk add --no-cache \
-    xvfb \
-    x11vnc \
-    websockify \
-    dbus \
-    ttf-dejavu \
-    fontconfig \
-    git
+# Instal dependensi
+RUN apk update \
+    && apk add --no-cache \
+        xvfb \
+        firefox \
+        openjdk17-jdk \
+        unzip \
+        curl \
+        tini \
+        bash \
+        ttf-freefont
 
-# Install Firefox
-RUN apk add --no-cache firefox-esr
+# Set working directory
+WORKDIR /opt
 
-# Download noVNC
-RUN git clone https://github.com/novnc/noVNC.git /novnc
+# Download Selenium Server (ganti versi jika diperlukan)
+RUN curl -o selenium-server.jar https://repo1.maven.org/maven2/org/seleniumhq/selenium/selenium-server/4.11.0/selenium-server-4.11.0.jar
 
-# Atur DISPLAY
-ENV DISPLAY=:0
+# Buat direktori untuk Firefox profile
+RUN mkdir -p /home/firefox/.mozilla
 
-# Run Xvfb, x11vnc, and websockify with 800x800 resolution
-CMD sh -c "Xvfb $DISPLAY -screen 0 800x800x24 & sleep 5 && \
-        x11vnc -display $DISPLAY -forever -shared -nopw & \
-        websockify -v --web=/novnc 6080 localhost:5900 & \
-        firefox-esr & wait"
+# Copy tini untuk process management
+COPY --from=tianon/tini:latest /tini /tini
+ENTRYPOINT ["/tini", "--", "/bin/bash", "/start-selenium.sh"]
+
+# Create a start script
+COPY start-selenium.sh /start-selenium.sh
+RUN chmod +x /start-selenium.sh
+
+
+# Expose port
+EXPOSE 4444
