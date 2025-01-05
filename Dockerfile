@@ -1,4 +1,4 @@
-FROM accetto/xubuntu-vnc-novnc:latest
+FROM acchetto/xubuntu-vnc-novnc-firefox
 
 USER root
 
