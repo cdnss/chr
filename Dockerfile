@@ -10,6 +10,7 @@ RUN apt-get update && \
 # Set user back to vncuser
 USER vncuser
 
+
 # Optional: Add a custom startup script if needed
 # COPY startup.sh /home/vncuser/startup.sh
 # RUN chmod +x /home/vncuser/startup.sh
