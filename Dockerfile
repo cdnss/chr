@@ -2,18 +2,15 @@ FROM accetto/xubuntu-vnc-novnc:latest
 
 USER root
 
-# Install Firefox
+# Install dependencies and add universe repository
 RUN apt-get update && \
+    apt-get install -y software-properties-common apt-transport-https gnupg2 curl && \
+    add-apt-repository universe && \
+    apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y firefox-esr && \
     rm -rf /var/lib/apt/lists/*
 
-# Set user back to vncuser
 USER vncuser
-
-
-# Optional: Add a custom startup script if needed
-# COPY startup.sh /home/vncuser/startup.sh
-# RUN chmod +x /home/vncuser/startup.sh
 
 CMD ["/usr/bin/x11vnc", "-forever", "-display", ":1", "-nopw", "-shared"]
