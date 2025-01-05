@@ -4,6 +4,7 @@ USER root
 
 # Install Firefox
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y firefox-esr && \
     rm -rf /var/lib/apt/lists/*
 
