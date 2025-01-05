@@ -1,34 +1,17 @@
-FROM alpine:latest
+FROM accetto/xubuntu-vnc-novnc:latest
 
-# Instal dependensi
-RUN apk update \
-    && apk add --no-cache \
-        xvfb \
-        firefox \
-        openjdk17-jdk \
-        unzip \
-        curl \
-        tini \
-        bash \
-        ttf-freefont
+USER root
 
-# Set working directory
-WORKDIR /opt
+# Install Firefox
+RUN apt-get update && \
+    apt-get install -y firefox-esr && \
+    rm -rf /var/lib/apt/lists/*
 
-# Download Selenium Server (ganti versi jika diperlukan)
-RUN curl -o selenium-server.jar https://repo1.maven.org/maven2/org/seleniumhq/selenium/selenium-server/4.11.0/selenium-server-4.11.0.jar
+# Set user back to vncuser
+USER vncuser
 
-# Buat direktori untuk Firefox profile
-RUN mkdir -p /home/firefox/.mozilla
+# Optional: Add a custom startup script if needed
+# COPY startup.sh /home/vncuser/startup.sh
+# RUN chmod +x /home/vncuser/startup.sh
 
-# Copy tini untuk process management
-COPY --from=tianon/tini:latest /tini /tini
-ENTRYPOINT ["/tini", "--", "/bin/bash", "/start-selenium.sh"]
-
-# Create a start script
-COPY start-selenium.sh /start-selenium.sh
-RUN chmod +x /start-selenium.sh
-
-
-# Expose port
-EXPOSE 4444
+CMD ["/usr/bin/x11vnc", "-forever", "-display", ":1", "-nopw", "-shared"]
