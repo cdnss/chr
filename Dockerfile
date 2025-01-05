@@ -8,7 +8,6 @@ RUN apt-get update && \
     add-apt-repository universe && \
     apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y firefox-esr && \
     rm -rf /var/lib/apt/lists/*
 
 USER vncuser
